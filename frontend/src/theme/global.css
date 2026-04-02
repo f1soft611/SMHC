@@ -1,0 +1,30 @@
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(11, 107, 111, 0.15),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 80%,
+      rgba(242, 143, 59, 0.13),
+      transparent 34%
+    ),
+    linear-gradient(160deg, #e9f2f3 0%, #f8fbfb 44%, #edf3f3 100%);
+  background-size:
+    28px 28px,
+    28px 28px,
+    auto,
+    auto,
+    auto;
+  background-attachment: fixed;
+}
