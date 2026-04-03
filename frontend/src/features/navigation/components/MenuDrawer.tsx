@@ -10,6 +10,7 @@ import {
   Chip,
   Divider,
   Drawer,
+  IconButton,
   ListItemButton,
   Stack,
   Typography,
@@ -65,7 +66,7 @@ export function MenuDrawer({
 
   return (
     <Drawer
-      anchor="right"
+      anchor="left"
       open={isOpen}
       onClose={onClose}
       sx={{
@@ -86,10 +87,9 @@ export function MenuDrawer({
           <Typography variant="h6" fontWeight={700}>
             운영 메뉴
           </Typography>
-          <CloseRounded
-            onClick={onClose}
-            sx={{ cursor: 'pointer', fontSize: 24 }}
-          />
+          <IconButton aria-label="메뉴 닫기" onClick={onClose}>
+            <CloseRounded sx={{ fontSize: 24 }} />
+          </IconButton>
         </Stack>
 
         <Divider />
