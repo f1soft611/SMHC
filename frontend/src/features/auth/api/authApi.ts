@@ -14,13 +14,16 @@ function buildMockLoginResponse(
   tenantCode: string,
   username: string,
 ): LoginResponse {
+  const roles =
+    username === 'admin' ? ['ROLE_USER', 'ROLE_ADMIN'] : ['ROLE_USER'];
+
   return {
     accessToken: `mock-token-${Date.now()}`,
     user: {
       id: 'MVP-USER-001',
       tenantCode,
       username,
-      roles: ['ROLE_USER'],
+      roles,
     },
   };
 }
