@@ -16,17 +16,18 @@ import {
   Typography,
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { menuCategories } from '../constants/menuTree';
-import type { MenuCategory } from '../types/menu';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../auth/store/useAuthStore';
+import {
+  filterMenuCategoriesByRoles,
+  getRoutePathFromMenuItemId,
+} from '../constants/menuTree';
 import { useMenuDrawerState } from '../store/useMenuDrawerState';
+import { useMenuStore } from '../store/useMenuStore';
+import type { MenuCategory } from '../types/menu';
 
-interface MenuDrawerProps {
-  selectedCategoryId: string;
-  selectedItemId: string;
-  onSelectCategory: (categoryId: string) => void;
-  onSelectItem: (itemId: string) => void;
-  onClose: () => void;
-}
+const emptyRoles: string[] = [];
 
 function getCategoryIcon(category: MenuCategory) {
   switch (category.id) {
@@ -43,32 +44,43 @@ function getCategoryIcon(category: MenuCategory) {
   }
 }
 
-export function MenuDrawer({
-  selectedCategoryId,
-  selectedItemId,
-  onSelectCategory,
-  onSelectItem,
-  onClose,
-}: MenuDrawerProps) {
-  const { isOpen } = useMenuDrawerState();
-  const selectedCategory = menuCategories.find(
-    (cat) => cat.id === selectedCategoryId,
+export function MenuDrawer() {
+  const navigate = useNavigate();
+  const isOpen = useMenuDrawerState((state) => state.isOpen);
+  const closeDrawer = useMenuDrawerState((state) => state.closeDrawer);
+  const selectedCategoryId = useMenuStore((state) => state.selectedCategoryId);
+  const selectedItemId = useMenuStore((state) => state.selectedItemId);
+  const setSelectedCategory = useMenuStore(
+    (state) => state.setSelectedCategory,
+  );
+  const setSelectedItemId = useMenuStore((state) => state.setSelectedItemId);
+  const roles = useAuthStore((state) => state.user?.roles ?? emptyRoles);
+  const visibleCategories = useMemo(
+    () => filterMenuCategoriesByRoles(roles),
+    [roles],
+  );
+  const selectedCategory = useMemo(
+    () =>
+      visibleCategories.find((cat) => cat.id === selectedCategoryId) ??
+      visibleCategories[0],
+    [selectedCategoryId, visibleCategories],
   );
 
   const handleCategoryClick = (categoryId: string) => {
-    onSelectCategory(categoryId);
+    setSelectedCategory(categoryId);
   };
 
   const handleItemClick = (itemId: string) => {
-    onSelectItem(itemId);
-    onClose();
+    setSelectedItemId(itemId);
+    closeDrawer();
+    navigate(getRoutePathFromMenuItemId(itemId));
   };
 
   return (
     <Drawer
       anchor="left"
       open={isOpen}
-      onClose={onClose}
+      onClose={closeDrawer}
       sx={{
         '& .MuiDrawer-paper': {
           width: { xs: '100%', sm: 360 },
@@ -87,7 +99,7 @@ export function MenuDrawer({
           <Typography variant="h6" fontWeight={700}>
             운영 메뉴
           </Typography>
-          <IconButton aria-label="메뉴 닫기" onClick={onClose}>
+          <IconButton aria-label="메뉴 닫기" onClick={closeDrawer}>
             <CloseRounded sx={{ fontSize: 24 }} />
           </IconButton>
         </Stack>
@@ -96,7 +108,7 @@ export function MenuDrawer({
 
         {/* 카테고리 탭 */}
         <Stack spacing={0.5}>
-          {menuCategories.map((category) => {
+          {visibleCategories.map((category) => {
             const readyCount = category.items.filter(
               (item) => item.status === 'ready',
             ).length;

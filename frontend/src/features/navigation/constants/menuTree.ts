@@ -1,6 +1,8 @@
 import type { MenuCategory, MenuItem } from '../types/menu';
 
 export const defaultMenuItemId = 'smart-monitoring.ccp-dashboard';
+const adminRoles = ['ROLE_ADMIN', 'ROLE-SYSTEM_ADMIN'];
+const filteredMenuCategoryCache = new Map<string, MenuCategory[]>();
 
 export const menuCategories: MenuCategory[] = [
   {
@@ -13,6 +15,7 @@ export const menuCategories: MenuCategory[] = [
     items: [
       {
         id: 'smart-monitoring.ccp-dashboard',
+        path: '/dashboard',
         label: 'CCP 통합 관제 대시보드',
         status: 'ready',
         description:
@@ -23,6 +26,7 @@ export const menuCategories: MenuCategory[] = [
       },
       {
         id: 'smart-monitoring.realtime-ccp',
+        path: '/monitoring/realtime-ccp',
         label: '실시간 CCP 모니터링 현황',
         status: 'coming-soon',
         description: '온도, 시간, 습도 같은 CCP 데이터를 시계열로 추적합니다.',
@@ -43,6 +47,7 @@ export const menuCategories: MenuCategory[] = [
     items: [
       {
         id: 'ccp-management.heating-journal',
+        path: '/coming-soon/ccp-management/heating-journal',
         label: '가열공정 데이터 수집/개선일지',
         status: 'coming-soon',
         description:
@@ -54,6 +59,7 @@ export const menuCategories: MenuCategory[] = [
       },
       {
         id: 'ccp-management.cooling-journal',
+        path: '/coming-soon/ccp-management/cooling-journal',
         label: '냉동/냉각 공정 데이터 수집/개선일지',
         status: 'coming-soon',
         description: '냉각 공정 데이터와 개선 이력을 표준 양식으로 축적합니다.',
@@ -73,6 +79,7 @@ export const menuCategories: MenuCategory[] = [
     items: [
       {
         id: 'haccp-docs.prerequisite-check',
+        path: '/coming-soon/haccp-docs/prerequisite-check',
         label: '선행요건 점검 일지',
         status: 'coming-soon',
         description:
@@ -84,6 +91,7 @@ export const menuCategories: MenuCategory[] = [
       },
       {
         id: 'haccp-docs.training-ledger',
+        path: '/coming-soon/haccp-docs/training-ledger',
         label: 'HACCP 조직도 및 교육 훈련 대장',
         status: 'coming-soon',
         description: '조직도와 교육 훈련 이력을 문서 단위로 체계화합니다.',
@@ -103,6 +111,7 @@ export const menuCategories: MenuCategory[] = [
     items: [
       {
         id: 'analytics-report.quality-dashboard',
+        path: '/coming-soon/analytics-report/quality-dashboard',
         label: '생산 및 품질 종합 대시보드',
         status: 'coming-soon',
         description: '주요 생산 및 품질 KPI를 공정 흐름과 함께 요약합니다.',
@@ -112,6 +121,7 @@ export const menuCategories: MenuCategory[] = [
       },
       {
         id: 'analytics-report.ccp-trend-report',
+        path: '/coming-soon/analytics-report/ccp-trend-report',
         label: 'CCP 트렌드 분석 및 이상징후 리포트',
         status: 'coming-soon',
         description:
@@ -132,26 +142,84 @@ export const menuCategories: MenuCategory[] = [
     items: [
       {
         id: 'system-settings.user-management',
+        path: '/system-settings/users',
         label: '사용자관리',
-        status: 'coming-soon',
+        status: 'ready',
         description:
           '현장과 관리 조직의 사용자 계정을 역할 기반으로 관리합니다.',
         objective: '업무별 접근 권한과 책임 범위를 명확하게 유지합니다.',
         highlight: '역할 기반 접근 제어와 승인 체계 연동 예정',
         tone: 'info',
+        allowedRoles: adminRoles,
       },
       {
         id: 'system-settings.authorization-management',
+        path: '/coming-soon/system-settings/authorization-management',
         label: '권한관리',
         status: 'coming-soon',
         description: '메뉴 접근, 등록, 승인 같은 권한 정책을 관리합니다.',
         objective: '업무 권한 오배정을 줄이고 관리자 운영 부담을 낮춥니다.',
         highlight: '권한 템플릿과 감사 로그 연결 예정',
         tone: 'info',
+        allowedRoles: adminRoles,
       },
     ],
   },
 ];
+
+export function getAllMenuItems(): MenuItem[] {
+  return menuCategories.flatMap((category) => category.items);
+}
+
+function hasRoleAccess(item: MenuItem, roles: string[]): boolean {
+  if (!item.allowedRoles || item.allowedRoles.length === 0) {
+    return true;
+  }
+
+  return item.allowedRoles.some((role) => roles.includes(role));
+}
+
+function getRoleCacheKey(roles: string[]): string {
+  if (roles.length === 0) {
+    return '__no_roles__';
+  }
+
+  return [...roles].sort().join('|');
+}
+
+export function filterMenuCategoriesByRoles(roles: string[]): MenuCategory[] {
+  const cacheKey = getRoleCacheKey(roles);
+  const cachedCategories = filteredMenuCategoryCache.get(cacheKey);
+
+  if (cachedCategories) {
+    return cachedCategories;
+  }
+
+  const filteredCategories = menuCategories.flatMap((category) => {
+    const visibleItems = category.items.filter((item) =>
+      hasRoleAccess(item, roles),
+    );
+
+    if (visibleItems.length === 0) {
+      return [];
+    }
+
+    if (visibleItems.length === category.items.length) {
+      return [category];
+    }
+
+    return [
+      {
+        ...category,
+        items: visibleItems,
+      },
+    ];
+  });
+
+  filteredMenuCategoryCache.set(cacheKey, filteredCategories);
+
+  return filteredCategories;
+}
 
 export function findMenuCategoryById(categoryId: string): MenuCategory | null {
   return menuCategories.find((category) => category.id === categoryId) ?? null;
@@ -174,4 +242,31 @@ export function findMenuItemById(itemId: string): MenuItem | null {
   }
 
   return null;
+}
+
+export function getRoutePathFromMenuItemId(itemId: string): string {
+  const item = findMenuItemById(itemId);
+
+  return item?.path ?? '/coming-soon/misc/unknown';
+}
+
+export function findMenuItemByPath(pathname: string): MenuItem | null {
+  return getAllMenuItems().find((item) => item.path === pathname) ?? null;
+}
+
+export function findMenuSelectionByPath(
+  pathname: string,
+): { categoryId: string; itemId: string } | null {
+  const item = findMenuItemByPath(pathname);
+
+  if (!item) {
+    return null;
+  }
+
+  const category = findCategoryByItemId(item.id);
+
+  return {
+    categoryId: category?.id ?? menuCategories[0]?.id ?? 'smart-monitoring',
+    itemId: item.id,
+  };
 }

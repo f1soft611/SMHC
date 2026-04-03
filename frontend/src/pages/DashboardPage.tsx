@@ -126,12 +126,7 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clearAuth);
-  const selectedCategoryId = useMenuStore((state) => state.selectedCategoryId);
   const selectedItemId = useMenuStore((state) => state.selectedItemId);
-  const setSelectedCategory = useMenuStore(
-    (state) => state.setSelectedCategory,
-  );
-  const setSelectedItemId = useMenuStore((state) => state.setSelectedItemId);
   const resetMenuSelection = useMenuStore((state) => state.resetMenuSelection);
   const selectedSiteId = usePlantUiStore((state) => state.selectedSiteId);
   const dateRange = usePlantUiStore((state) => state.dateRange);
@@ -256,12 +251,7 @@ export function DashboardPage() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100dvh' }}>
-      <TopNavigation
-        selectedCategoryId={selectedCategoryId}
-        selectedItemId={selectedItemId}
-        onSelectCategory={setSelectedCategory}
-        onSelectItem={setSelectedItemId}
-      />
+      <TopNavigation />
 
       <Container maxWidth="xl" sx={{ py: { xs: 2, md: 3 } }}>
         <Paper

@@ -3,12 +3,14 @@ export type MenuTone = 'primary' | 'secondary' | 'success' | 'warning' | 'info';
 
 export interface MenuItem {
   id: string;
+  path: string;
   label: string;
   status: MenuStatus;
   description: string;
   objective: string;
   highlight: string;
   tone: MenuTone;
+  allowedRoles?: string[];
 }
 
 export interface MenuCategory {

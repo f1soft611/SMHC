@@ -4,17 +4,8 @@ import { IconButton, InputBase, Paper, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useMenuDrawerState } from '../store/useMenuDrawerState';
 
-interface HeaderBarProps {
-  onMenuToggle: () => void;
-}
-
-export function HeaderBar({ onMenuToggle }: HeaderBarProps) {
-  const { toggleDrawer } = useMenuDrawerState();
-
-  const handleMenuClick = () => {
-    toggleDrawer();
-    onMenuToggle();
-  };
+export function HeaderBar() {
+  const toggleDrawer = useMenuDrawerState((state) => state.toggleDrawer);
 
   return (
     <Paper
@@ -46,7 +37,7 @@ export function HeaderBar({ onMenuToggle }: HeaderBarProps) {
         {/* 메뉴 버튼 (왼쪽) */}
         <IconButton
           aria-label="메뉴 열기"
-          onClick={handleMenuClick}
+          onClick={toggleDrawer}
           sx={(theme) => ({
             color: 'primary.main',
             bgcolor: alpha(theme.palette.primary.main, 0.08),

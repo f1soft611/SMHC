@@ -9,8 +9,12 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { menuCategories } from '../constants/menuTree';
+import { useMemo } from 'react';
+import { filterMenuCategoriesByRoles } from '../constants/menuTree';
 import type { MenuItem } from '../types/menu';
+import { useAuthStore } from '../../auth/store/useAuthStore';
+
+const emptyRoles: string[] = [];
 
 interface SidebarMenuProps {
   selectedItemId: string;
@@ -26,6 +30,12 @@ function MenuStatusChip({ item }: { item: MenuItem }) {
 }
 
 export function SidebarMenu({ selectedItemId, onSelect }: SidebarMenuProps) {
+  const roles = useAuthStore((state) => state.user?.roles ?? emptyRoles);
+  const visibleCategories = useMemo(
+    () => filterMenuCategoriesByRoles(roles),
+    [roles],
+  );
+
   return (
     <Paper
       sx={{
@@ -42,7 +52,7 @@ export function SidebarMenu({ selectedItemId, onSelect }: SidebarMenuProps) {
       </Typography>
 
       <Stack spacing={2}>
-        {menuCategories.map((category) => (
+        {visibleCategories.map((category) => (
           <Stack key={category.id} spacing={0.4}>
             <Typography
               variant="overline"
