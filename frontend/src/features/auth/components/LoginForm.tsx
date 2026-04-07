@@ -107,10 +107,10 @@ export function LoginForm() {
           }}
         >
           <Typography variant="subtitle2" color="primary.main" fontWeight={700}>
-            MVP 계정 안내
+            테스트 계정 안내
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
-            운영 연동 전 MVP 계정은 SMHC-DEMO / admin / admin1234 입니다.
+            SMHC-DEMO / admin / admin1234 입니다.
           </Typography>
         </Box>
       </Stack>
