@@ -1,4 +1,3 @@
-import ShieldRounded from '@mui/icons-material/ShieldRounded';
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { LoginForm } from '../features/auth/components/LoginForm';
 
@@ -28,11 +27,26 @@ export function LoginPage() {
         }}
       >
         <Stack spacing={2.5}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <ShieldRounded color="primary" />
-            <Typography fontWeight={700} color="primary.main">
-              SMHC Access
-            </Typography>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Box
+              component="img"
+              src="/favicon.svg?v=20260407"
+              alt="SMHC 로고"
+              sx={{
+                width: 44,
+                height: 44,
+                borderRadius: 2,
+                boxShadow: '0 10px 24px rgba(7, 71, 74, 0.18)',
+              }}
+            />
+            <Stack spacing={0.25}>
+              <Typography fontWeight={800} color="primary.main">
+                SMHC Access
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Smart HACCP Cloud Service
+              </Typography>
+            </Stack>
           </Stack>
 
           <Typography variant="body2" color="text.secondary">

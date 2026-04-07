@@ -1,6 +1,13 @@
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import SearchRounded from '@mui/icons-material/SearchRounded';
-import { IconButton, InputBase, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  InputBase,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useMenuDrawerState } from '../store/useMenuDrawerState';
 
@@ -50,20 +57,43 @@ export function HeaderBar() {
         </IconButton>
 
         {/* 로고 (가운데 고정) */}
-        <Typography
-          variant="subtitle2"
-          fontWeight={700}
-          color="primary.main"
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
           sx={{
             position: 'absolute',
             left: '50%',
             transform: 'translateX(-50%)',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
+            maxWidth: { xs: 120, sm: 180 },
           }}
         >
-          SMHC
-        </Typography>
+          <Box
+            component="img"
+            src="/favicon.svg?v=20260407"
+            alt="SMHC 로고"
+            sx={{
+              width: 28,
+              height: 28,
+              borderRadius: 1.5,
+              flexShrink: 0,
+              boxShadow: '0 8px 18px rgba(7, 71, 74, 0.16)',
+            }}
+          />
+          <Typography
+            variant="subtitle2"
+            fontWeight={800}
+            color="primary.main"
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              letterSpacing: '0.04em',
+            }}
+          >
+            SMHC
+          </Typography>
+        </Stack>
 
         {/* 검색 (오른쪽) */}
         <Paper
