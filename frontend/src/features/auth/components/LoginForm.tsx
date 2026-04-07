@@ -46,9 +46,6 @@ export function LoginForm() {
         <Typography variant="h5" fontWeight={700}>
           로그인
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          운영 연동 전 MVP 계정은 SMHC-DEMO / admin / admin1234 입니다.
-        </Typography>
 
         <TextField
           label="업체코드"
@@ -97,6 +94,25 @@ export function LoginForm() {
         >
           {loginMutation.isPending ? '로그인 중...' : '로그인'}
         </Button>
+
+        <Box
+          sx={{
+            mt: 1,
+            px: 2,
+            py: 1.75,
+            borderRadius: 2,
+            backgroundColor: '#f1f3f5',
+            border: '1px solid',
+            borderColor: '#e2e6ea',
+          }}
+        >
+          <Typography variant="subtitle2" color="primary.main" fontWeight={700}>
+            MVP 계정 안내
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
+            운영 연동 전 MVP 계정은 SMHC-DEMO / admin / admin1234 입니다.
+          </Typography>
+        </Box>
       </Stack>
     </Box>
   );

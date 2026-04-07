@@ -78,15 +78,27 @@ export const menuCategories: MenuCategory[] = [
     tone: 'success',
     items: [
       {
-        id: 'haccp-docs.prerequisite-check',
-        path: '/coming-soon/haccp-docs/prerequisite-check',
-        label: '선행요건 점검 일지',
-        status: 'coming-soon',
+        id: 'haccp-docs.template-management',
+        path: '/haccp-docs/templates',
+        label: 'CCP 문서 템플릿 관리',
+        status: 'ready',
         description:
-          '일일 점검표를 태블릿과 PC 환경에서 동일한 기준으로 기록합니다.',
+          '관리자가 CCP 문서 템플릿 구조와 블록 속성을 생성·관리합니다.',
         objective:
-          '현장 점검 누락을 줄이고 감사 대응 자료를 빠르게 확보합니다.',
-        highlight: '전자 서명 포함 점검 작성 UX 설계 예정',
+          '새로운 CCP 양식을 개발자 도움 없이 템플릿으로 정의하고 버전 관리합니다.',
+        highlight: '템플릿 구조 편집과 블록 메타데이터 관리 화면 제공',
+        tone: 'success',
+      },
+      {
+        id: 'haccp-docs.document-writing',
+        path: '/haccp-docs/documents',
+        label: 'CCP 점검일지 작성',
+        status: 'ready',
+        description:
+          '게시된 템플릿을 기준으로 실제 점검일지를 작성하고 미리보기를 확인합니다.',
+        objective:
+          '현장 입력과 반복 행, 체크박스, 서술형 기록을 템플릿 기준으로 일관되게 작성합니다.',
+        highlight: '버튼 기반 HTML 미리보기와 템플릿 기반 일지 작성 제공',
         tone: 'success',
       },
       {

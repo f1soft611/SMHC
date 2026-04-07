@@ -2,6 +2,9 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { DashboardPage } from '../../pages/DashboardPage';
+import { DocumentTemplateEditorPage } from '../../pages/DocumentTemplateEditorPage';
+import { DocumentTemplateManagementPage } from '../../pages/DocumentTemplateManagementPage';
+import { DocumentJournalPage } from '../../pages/DocumentJournalPage';
 import { LoginPage } from '../../pages/LoginPage';
 import { SystemSettingsPage } from '../../pages/SystemSettingsPage';
 import { ComingSoonPage } from '../../pages/ComingSoonPage';
@@ -108,6 +111,46 @@ export function AppRouter() {
             isAuthenticated={isAuthenticated}
             userRoles={userRoles}
             element={<DashboardPage />}
+          />
+        }
+      />
+      <Route
+        path="/haccp-docs/templates"
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            userRoles={userRoles}
+            element={<DocumentTemplateManagementPage />}
+          />
+        }
+      />
+      <Route
+        path="/haccp-docs/templates/:templateId/editor"
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            userRoles={userRoles}
+            element={<DocumentTemplateEditorPage />}
+          />
+        }
+      />
+      <Route
+        path="/haccp-docs/documents"
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            userRoles={userRoles}
+            element={<DocumentJournalPage />}
+          />
+        }
+      />
+      <Route
+        path="/haccp-docs/prerequisite-check"
+        element={
+          <ProtectedRoute
+            isAuthenticated={isAuthenticated}
+            userRoles={userRoles}
+            element={<Navigate to="/haccp-docs/templates" replace />}
           />
         }
       />
